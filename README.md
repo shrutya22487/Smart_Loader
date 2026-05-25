@@ -26,10 +26,15 @@ The segmentation fault handler is the core of this program. When a page fault oc
 
 ## Usage 🚀
 
-1. **Compilation:**
+1. If you are on a 64 bit system you will have to install multilib support by using this command
+```bash
+sudo apt install gcc-multilib g++-multilib libc6-dev-i386
+```
+
+2. **Compilation:**
    ```bash
-   gcc -o smart_loader loader.c
-2. **Execution**
+   make
+3. **Execution**
    ```bash
     ./smart_loader <ELF Executable>
 Replace `<ELF Executable>` with the path to your 32-bit ELF binary.
@@ -41,4 +46,7 @@ Replace `<ELF Executable>` with the path to your 32-bit ELF binary.
 ### Notes 
 - Ensure the ELF binary is a 32-bit executable (ELFCLASS32).
 - The loader assumes the ELF file can be opened for reading - (O_RDONLY).
-- Clean up resources using free_space() and unmapping_virtual_memory() after execution.
+- Clean up files using 
+```bash
+make clean
+```
