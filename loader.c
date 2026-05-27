@@ -106,15 +106,14 @@ void SIGSEGV_handler(int signum, siginfo_t *sig, void *context) {
     if (signum == SIGSEGV) {
         no_of_faults++;
         for (int i = 0; i < ehdr->e_phnum; i++) {
-            if ((sig->si_addr) >= (phdr[i].p_vaddr) && (sig->si_addr) < phdr[i].p_vaddr + phdr[i].p_memsz) {
-                //printf("Fault address is : %p\n", sig->si_addr);
+            if ((int)(sig->si_addr) >= (phdr[i].p_vaddr) && (int)(sig->si_addr) < phdr[i].p_vaddr + phdr[i].p_memsz) {
+                printf("Fault address is : %p\n", sig->si_addr);
 
                 // Attempt to allocate memory using mmap
                 virtual_mem = mmap(sig->si_addr, PAGE_SIZE, PROT_READ | PROT_WRITE | PROT_EXEC,
                                    MAP_ANONYMOUS | MAP_PRIVATE, 0, 0);
 
                 if (virtual_mem == MAP_FAILED) {
-                    // mmap failed
                     printf("mmap failed\n");
                     exit(1);
                 }
@@ -122,8 +121,8 @@ void SIGSEGV_handler(int signum, siginfo_t *sig, void *context) {
                 check_offset(lseek(fd, phdr[i].p_offset, SEEK_SET));
                 ssize_t bytes_read = read(fd, virtual_mem, PAGE_SIZE);
 
-                //printf("size of phdr segment is %d\n", phdr[i].p_memsz);
-                //printf("Number of bytes read: %d\n", bytes_read);
+                printf("size of phdr segment is %d\n", phdr[i].p_memsz);
+                printf("Number of bytes read: %d\n", bytes_read);
 
                 if (bytes_read < 0) {
                     printf("Less than 0 bytes read\n");
